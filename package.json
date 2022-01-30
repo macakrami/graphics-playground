@@ -1,0 +1,36 @@
+{
+    "name": "graphics-playground",
+    "version": "0.1.0",
+    "description": "Graphics playground",
+    "author": "Mac Akrami",
+    "license": "ISC",
+    "keywords": [
+        "canvas",
+        "2d",
+        "3d"
+    ],
+    "scripts": {
+        "clean-dist": "rm -rf dist/*",
+        "ff-show": "sleep 1;open -a /Applications/Firefox.app dist/index.html",
+        "build-dev": "npm run clean-dist && webpack --mode=development",
+        "build-prod": "npm run clean-dist && webpack --mode=production",
+        "start-dev": "webpack serve --mode=development"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/macakrami/graphics-playground.git"
+    },
+    "bugs": {
+        "url": "https://github.com/macakrami/graphics-playground/issues"
+    },
+    "homepage": "https://github.com/macakrami/graphics-playground#readme",
+    "devDependencies": {
+        "css-loader": "^6.5.1",
+        "html-inline-script-webpack-plugin": "^2.0.3",
+        "html-webpack-plugin": "^5.5.0",
+        "style-loader": "^3.3.1",
+        "webpack": "^5.67.0",
+        "webpack-cli": "^4.9.2",
+        "webpack-dev-server": "^4.7.3"
+    }
+}
