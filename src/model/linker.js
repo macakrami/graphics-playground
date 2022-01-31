@@ -1,10 +1,13 @@
+import Dom from './dom';
 
 export default class Linker {
+	/** @var {HTMLCanvasElement} */
 	static canvas;
+	/** @var {CanvasRenderingContext2D} */
 	static ctx;
 	
 	static init() {
-		this.canvas = document.createElement('canvas');
+		this.canvas = Dom.createCanvas();
 		this.ctx = this.canvas.getContext('2d');
 		if (this.ctx === null) {
 			throw new Error('Unable to create 2D context.');
@@ -12,12 +15,12 @@ export default class Linker {
 	}
 	static attach(root) {
 		root.append(this.canvas);
-		window.addEventListener('resize', this.onResize, false);
+		Dom.register('resize', this.onResize);
 		this.onResize();
 	}
 	static detach() {
 		this.canvas.parentElement.removeChild(this.canvas);
-		window.removeEventListener('resize', this.onResize);
+		Dom.unregister('resize', this.onResize);
 	}
 	static clear() {
 		this.ctx = null;
@@ -26,8 +29,8 @@ export default class Linker {
 	
 	static onResize() {
 		const {canvas} = Linker;
-		canvas.width = document.body.clientWidth;
-		canvas.height = document.body.clientHeight;
+		canvas.width = Dom.getWidth();
+		canvas.height = Dom.getHeight();
 	}
 	
 }

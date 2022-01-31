@@ -13,6 +13,7 @@
         "clean-dist": "rm -rf dist/*",
         "ff-show": "sleep 1;open -a /Applications/Firefox.app dist/index.html",
         "build-dev": "npm run clean-dist && webpack --mode=development",
+        "build-dev-show": "npm run build-dev && npm run ff-show",
         "build-prod": "npm run clean-dist && webpack --mode=production",
         "start-dev": "webpack serve --mode=development"
     },

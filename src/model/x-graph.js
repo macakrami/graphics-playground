@@ -5,8 +5,10 @@ import Linker from './linker';
 
 // REView
 export default class XGraph {
+	
 	static canvas;
 	static ctx;
+	/** @var {Styler} */
 	static styler;
 	
 	static init() {
@@ -22,7 +24,6 @@ export default class XGraph {
 	}
 	
 	static clear() {
-		this.canvas = null;
 		this.ctx = null;
 		this.styler = null;
 	}
@@ -96,7 +97,7 @@ export default class XGraph {
 	
 	static clearRect(color) {
 		this.ctx.fillStyle = color || '#000';
-		this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+		this.ctx.fillRect(0, 0, Linker.canvas.width, Linker.canvas.height);
 	}
 	
 	static drawLineAsRectangle(line) {
@@ -114,17 +115,17 @@ export default class XGraph {
 	}
 	
 	static getMainFrame() {
-		return new Frame(0, 0, this.canvas.width, this.canvas.height);
+		return new Frame(0, 0, Linker.canvas.width, Linker.canvas.height);
 	}
 	
 	static getCenterFrame(width, height) {
-		let x = (this.canvas.width - width) / 2;
-		let y = (this.canvas.height - height) / 2;
+		let x = (Linker.canvas.width - width) / 2;
+		let y = (Linker.canvas.height - height) / 2;
 		return new Frame(x, y, width, height);
 	}
 	
 	static getCanvasSize() {
-		return new Vec2(this.canvas.width, this.canvas.height);
+		return new Vec2(Linker.canvas.width, Linker.canvas.height);
 	}
 	
 }

@@ -3,6 +3,7 @@ import Linker from './linker';
 import XMouse from './x-mouse';
 import XGraph from './x-graph';
 import XKeyboard from './x-keyboard';
+import Dom from './dom';
 
 export default class XEngine {
 	static _onDraw;
@@ -61,9 +62,9 @@ export default class XEngine {
 			delta = (now - lastDraw);
 			lastDraw = now;
 			XEngine._onDraw(now, delta);
-			window.requestAnimationFrame(loop);
+			Dom.nextFrame(loop);
 		};
-		window.requestAnimationFrame(loop);
+		Dom.nextFrame(loop);
 	}
 	
 	static log() {

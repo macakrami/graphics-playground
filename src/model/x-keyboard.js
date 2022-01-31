@@ -1,3 +1,4 @@
+import Dom from './dom';
 
 export default class XKeyboard {
 	
@@ -7,16 +8,16 @@ export default class XKeyboard {
 	 * Enable keyboard input listener
 	 */
 	static enable() {
-		window.addEventListener('keydown', XKeyboard._listener, false);
-		window.addEventListener('keyup', XKeyboard._listener, false);
+		Dom.register('keydown', XKeyboard._listener);
+		Dom.register('keyup', XKeyboard._listener);
 	}
 	
 	/**
 	 * Disable keyboard input listener
 	 */
 	static disable() {
-		window.removeEventListener('keydown', XKeyboard._listener);
-		window.removeEventListener('keyup', XKeyboard._listener);
+		Dom.unregister('keydown', XKeyboard._listener);
+		Dom.unregister('keyup', XKeyboard._listener);
 	}
 	
 	/**
@@ -37,7 +38,9 @@ export default class XKeyboard {
 		XKeyboard.keyState[event.keyCode] = event.type === 'keydown';
 	}
 	
-	
+	/**
+	 * Keyboard key codes
+	 */
 	static KEY = {
 		DOM_VK_CANCEL: 3,
 		DOM_VK_HELP: 6,
