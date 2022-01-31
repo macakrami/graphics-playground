@@ -1,3 +1,9 @@
+/*
+ * graphics-playground
+ * main.js
+ * Copyright (c) 2022 Mac Akrami
+ * GPL Licensed
+ */
 
 import './styles.css';
 import XEngine from './model/x-engine';
@@ -11,7 +17,24 @@ import Dom from './model/dom';
 
 
 class Main {
-	static _fullScreen = false;
+	
+	
+	static inFullscreen = false;
+	
+	static toggleFullscreen() {
+		const handler = (enabled) => {
+			if (enabled !== null) {
+				Main.inFullscreen = enabled;
+				XEngine.log((enabled ? 'Entered' : 'Exited') + ' fullscreen.');
+			}
+		};
+		if (this.inFullscreen) {
+			Linker.exitFullscreenMode(handler);
+		} else {
+			Linker.enterFullscreenMode(handler);
+		}
+	}
+	
 	
 	/**
 	 * Engine initialized handler
@@ -20,18 +43,6 @@ class Main {
 	static onInit() {
 		XGraph.styler.font = Configs.font;
 		Dom.setCursor(!Configs.hideCursor);
-		setTimeout(() => {
-			if (confirm('Enter fullscreen mode ?')) {
-				Linker.canvas.requestFullscreen()
-					.then(() => {
-						Main._fullScreen = true;
-						XEngine.log('Entered fullscreen mode');
-					})
-					.catch(() => {
-						Main._fullScreen = false;
-					});
-			}
-		}, 2000);
 	}
 	
 	/**
@@ -43,9 +54,14 @@ class Main {
 	static onDraw(now, delta) {
 		
 		// Esc to exit
-		if (XKeyboard.isDown(XKeyboard.KEY.DOM_VK_ESCAPE)) {
+		if (XKeyboard.isPressed(XKeyboard.KEY.DOM_VK_ESCAPE)) {
 			XEngine.stop();
 			return;
+		}
+		
+		// F to Fullscreen
+		if (XKeyboard.isPressed(XKeyboard.KEY.DOM_VK_F)) {
+			Main.toggleFullscreen();
 		}
 		
 		// constants
@@ -71,11 +87,14 @@ class Main {
 		XGraph.drawText(`(${mousePos.x}, ${mousePos.y})`, new Vec2(cWidth - 8, 50));
 		
 		// info
-		XGraph.drawText(`Esc to exit`, new Vec2(cWidth - 8, 75));
+		XGraph.drawText(`Esc = exit`, new Vec2(cWidth - 8, 75));
+		let fs = Main.inFullscreen ? '1' : '0';
+		XGraph.drawText(`F = Toggle Fullscreen (${fs})`, new Vec2(cWidth - 8, 100));
 	}
 	
 	/**
 	 * Main draw
+	 * reserved for rendering the good stuff
 	 *
 	 * @param now
 	 * @param delta

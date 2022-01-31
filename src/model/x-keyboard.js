@@ -1,8 +1,19 @@
+/*
+ * graphics-playground
+ * x-keyboard.js
+ * Copyright (c) 2022 Mac Akrami
+ * GPL Licensed
+ */
+
 import Dom from './dom';
 
+/**
+ * Keyboard input wrapper
+ */
 export default class XKeyboard {
 	
 	static keyState = {};
+	static keyStateLast = {};
 	
 	/**
 	 * Enable keyboard input listener
@@ -31,11 +42,32 @@ export default class XKeyboard {
 	}
 	
 	/**
+	 * Check where or not a key is pressed, and is true once per draw/frame.
+	 *
+	 * @param {number} code Key code to check
+	 * @returns {boolean}
+	 */
+	static isPressed(code) {
+		return this.isDown(code) && !this.keyStateLast[code];
+	}
+	
+	/**
 	 *
 	 * @param {KeyboardEvent} event
 	 */
 	static _listener(event) {
 		XKeyboard.keyState[event.keyCode] = event.type === 'keydown';
+	}
+	
+	/**
+	 * Store last values
+	 */
+	static updateLastDown() {
+		for (let k in this.keyState) {
+			if (this.keyState.hasOwnProperty(k)) {
+				this.keyStateLast[k] = this.keyState[k];
+			}
+		}
 	}
 	
 	/**

@@ -1,3 +1,9 @@
+/*
+ * graphics-playground
+ * x-math.js
+ * Copyright (c) 2022 Mac Akrami
+ * GPL Licensed
+ */
 
 export class XMath {
 	
@@ -63,8 +69,11 @@ export class XMath {
 	
 }
 
+
 export class Vec2 {
+	/** @var {number} */
 	x;
+	/** @var {number} */
 	y;
 	
 	constructor(x, y) {
@@ -72,26 +81,50 @@ export class Vec2 {
 		this.y = y;
 	}
 	
+	/**
+	 * @returns {Vec2}
+	 */
 	invert() {
 		return new Vec2(-this.x, -this.y);
 	}
 	
+	/**
+	 * @param {number | Vec2} x
+	 * @param {number} y
+	 * @returns {Vec2}
+	 */
 	add(x, y) {
 		if (x instanceof Vec2) {
 			return new Vec2(this.x + x.x, this.y + x.y);
 		}
 		return new Vec2(this.x + XMath.num(x), this.y + XMath.num(y));
 	}
+	
+	/**
+	 * @param {number | Vec2} x
+	 * @param {number} y
+	 * @returns {Vec2}
+	 */
 	sub(x, y) {
 		if (x instanceof Vec2) {
 			return new Vec2(this.x - x.x, this.y - x.y);
 		}
 		return new Vec2(this.x - x, this.y - y);
 	}
+	
+	/**
+	 * @param {number} val
+	 * @returns {Vec2}
+	 */
 	mul(val) {
 		val = XMath.num(val);
 		return new Vec2(this.x * val, this.y * val);
 	}
+	
+	/**
+	 * @param {number} val
+	 * @returns {Vec2}
+	 */
 	div(val) {
 		val = XMath.num(val);
 		if (val === 0) {
@@ -100,16 +133,29 @@ export class Vec2 {
 		return new Vec2(this.x / val, this.y / val);
 	}
 	
-	// ADVANCED
 	
+	/**
+	 * @param {Vec2} p
+	 * @returns {number}
+	 */
 	distanceTo(p) {
 		return Math.sqrt(Math.pow((p.x - this.x), 2) + Math.pow((p.y - this.y), 2));
 	}
+	
+	/**
+	 * @param {number} ang
+	 * @param {number} distance
+	 * @returns {Vec2}
+	 */
 	nextPoint(ang, distance) {
 		let x1 = this.x + (Math.cos(ang) * distance);
 		let y1 = this.y + (Math.sin(ang) * distance);
 		return new Vec2(x1, y1);
 	}
+	
+	/**
+	 * @returns {Vec2}
+	 */
 	randomPoint() {
 		let x1 = Math.floor(Math.random() * this.x);
 		let y1 = Math.floor(Math.random() * this.y);
@@ -117,10 +163,19 @@ export class Vec2 {
 	}
 }
 
+
 export class Frame {
+	/** @var {Vec2} */
 	point;
+	/** @var {Vec2} */
 	size;
 	
+	/**
+	 * @param {number | Vec2} x0  point.x or point
+	 * @param {number | Vec2} y0  point.y or size
+	 * @param {number} w0         width
+	 * @param {number} h0         height
+	 */
 	constructor(x0, y0, w0, h0) {
 		if (x0 instanceof Vec2 && y0 instanceof Vec2) {
 			this.point = x0;
@@ -131,46 +186,88 @@ export class Frame {
 		}
 	}
 	
-	
+	/**
+	 * @returns {Vec2}
+	 */
 	getCenter() {
 		return this.point.sub(this.size.div(2));
 	}
+	
+	/**
+	 * @param {Vec2} p
+	 */
 	setCenter(p) {
-		this.point = p.sub(this.size.getCenter());
+		this.point = p.sub(this.size.div(2));
 	}
+	
+	/**
+	 * @param {number} val
+	 * @returns {Frame}
+	 */
 	inset(val) {
 		let val2 = val * 2;
 		return new Frame(this.point.x + val, this.point.y + val, this.size.x - val2, this.size.y - val2);
 	}
+	
+	/**
+	 * @param {number} val
+	 * @returns {Frame}
+	 */
 	outset(val) {
 		let val2 = val * 2;
 		return new Frame(this.point.x - val, this.point.y - val, this.size.x + val2, this.size.y + val2);
 	}
 }
 
+
 export class Line {
+	/** @var {Vec2} */
 	p1;
+	/** @var {Vec2} */
 	p2;
 	
+	/**
+	 * @param {Vec2} p1
+	 * @param {Vec2} p2
+	 */
 	constructor(p1, p2) {
 		this.p1 = p1;
 		this.p2 = p2;
 	}
+	
+	/**
+	 * @param line
+	 * @returns {boolean|Vec2}
+	 */
 	intersectsLine(line) {
 		return XMath.get_line_intersection(this.p1, this.p2, line.p1, line.p2);
 	}
 }
 
+
 export class Triangle {
+	/** @var {Vec2} */
 	p1;
+	/** @var {Vec2} */
 	p2;
+	/** @var {Vec2} */
 	p3;
 	
+	/**
+	 * @param {Vec2} p1
+	 * @param {Vec2} p2
+	 * @param {Vec2} p3
+	 */
 	constructor(p1, p2, p3) {
 		this.p1 = p1;
 		this.p2 = p2;
 		this.p3 = p3;
 	}
+	
+	/**
+	 * @param {Vec2} p
+	 * @returns {boolean}
+	 */
 	containsPoint(p) {
 		return XMath.point_in_triangle(p, this.p1, this.p2, this.p3);
 	}

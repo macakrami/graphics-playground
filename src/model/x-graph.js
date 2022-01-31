@@ -1,3 +1,9 @@
+/*
+ * graphics-playground
+ * x-graph.js
+ * Copyright (c) 2022 Mac Akrami
+ * GPL Licensed
+ */
 
 import {Frame, Vec2} from './x-math';
 import Styler from './styler';
@@ -6,17 +12,12 @@ import Linker from './linker';
 // REView
 export default class XGraph {
 	
-	static canvas;
-	static ctx;
 	/** @var {Styler} */
 	static styler;
 	
 	static init() {
-		const {canvas, ctx} = Linker;
-		this.canvas = canvas;
-		this.ctx = ctx;
 		this.styler = new Styler({
-			ctx: this.ctx,
+			ctx: Linker.ctx,
 			method: 'stroke',
 			color: '#fff',
 			lineWidth: 1
@@ -24,14 +25,23 @@ export default class XGraph {
 	}
 	
 	static clear() {
-		this.ctx = null;
 		this.styler = null;
 	}
 	
+	/**
+	 * @param {Vec2} p1
+	 * @param {Vec2} p2
+	 * @param {Vec2} p3
+	 * @param {Vec2} p4
+	 */
 	static drawRectangle(p1, p2, p3, p4) {
 		this.drawPolyline([p1, p2, p3, p4], true);
 	}
 	
+	/**
+	 *
+	 * @param {Frame} frame
+	 */
 	static drawFrame(frame) {
 		let x1 = frame.point.x;
 		let y1 = frame.point.y;
@@ -47,8 +57,8 @@ export default class XGraph {
 	}
 	
 	static drawCircle(p, radius) {
-		this.ctx.beginPath();
-		this.ctx.arc(p.x, p.y, radius, 0, 2 * Math.PI);
+		this.styler.ctx.beginPath();
+		this.styler.ctx.arc(p.x, p.y, radius, 0, 2 * Math.PI);
 		this.styler.draw();
 	}
 	
@@ -58,46 +68,46 @@ export default class XGraph {
 	
 	static drawPolyline(points, shouldClose) {
 		let i, p, len = points.length;
-		this.ctx.beginPath();
+		this.styler.ctx.beginPath();
 		for (i = 0; i < len; i++) {
 			p = points[i];
 			if (i === 0) {
-				this.ctx.moveTo(p.x, p.y);
+				this.styler.ctx.moveTo(p.x, p.y);
 			} else {
-				this.ctx.lineTo(p.x, p.y);
+				this.styler.ctx.lineTo(p.x, p.y);
 			}
 		}
-		if (shouldClose) this.ctx.closePath();
+		if (shouldClose) this.styler.ctx.closePath();
 		this.styler.draw();
 	}
 	
 	static drawLine(line) {
-		this.ctx.beginPath();
-		this.ctx.moveTo(line.p1.x, line.p1.y);
-		this.ctx.lineTo(line.p2.x, line.p2.y);
+		this.styler.ctx.beginPath();
+		this.styler.ctx.moveTo(line.p1.x, line.p1.y);
+		this.styler.ctx.lineTo(line.p2.x, line.p2.y);
 		this.styler.draw();
 	}
 	
 	static drawTriangle(tri) {
-		this.ctx.beginPath();
-		this.ctx.moveTo(tri.p1.x, tri.p1.y);
-		this.ctx.lineTo(tri.p2.x, tri.p2.y);
-		this.ctx.lineTo(tri.p3.x, tri.p3.y);
-		this.ctx.closePath();
+		this.styler.ctx.beginPath();
+		this.styler.ctx.moveTo(tri.p1.x, tri.p1.y);
+		this.styler.ctx.lineTo(tri.p2.x, tri.p2.y);
+		this.styler.ctx.lineTo(tri.p3.x, tri.p3.y);
+		this.styler.ctx.closePath();
 		this.styler.draw();
 	}
 	
 	static drawPoint(p, color) {
 		if (color) {
-			this.ctx.fillStyle = color;
-			this.ctx.lineWidth = 1;
+			this.styler.ctx.fillStyle = color;
+			this.styler.ctx.lineWidth = 1;
 		}
-		this.ctx.fillRect(p.x, p.y, 1, 1);
+		this.styler.ctx.fillRect(p.x, p.y, 1, 1);
 	}
 	
 	static clearRect(color) {
-		this.ctx.fillStyle = color || '#000';
-		this.ctx.fillRect(0, 0, Linker.canvas.width, Linker.canvas.height);
+		this.styler.ctx.fillStyle = color || '#000';
+		this.styler.ctx.fillRect(0, 0, Linker.canvas.width, Linker.canvas.height);
 	}
 	
 	static drawLineAsRectangle(line) {

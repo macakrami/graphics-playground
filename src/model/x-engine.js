@@ -1,3 +1,9 @@
+/*
+ * graphics-playground
+ * x-engine.js
+ * Copyright (c) 2022 Mac Akrami
+ * GPL Licensed
+ */
 
 import Linker from './linker';
 import XMouse from './x-mouse';
@@ -62,6 +68,7 @@ export default class XEngine {
 			delta = (now - lastDraw);
 			lastDraw = now;
 			XEngine._onDraw(now, delta);
+			XKeyboard.updateLastDown();
 			Dom.nextFrame(loop);
 		};
 		Dom.nextFrame(loop);

@@ -1,3 +1,10 @@
+/*
+ * graphics-playground
+ * dom.js
+ * Copyright (c) 2022 Mac Akrami
+ * GPL Licensed
+ */
+
 
 /**
  * Keeping everything related to 'window' or 'document'
@@ -49,14 +56,6 @@ export default class Dom {
 		return document.body.clientHeight;
 	}
 	
-	// static update(element, props) {
-	// 	for (let k in props) {
-	// 		if (props.hasOwnProperty(k)) {
-	// 			element[k] = props[k];
-	// 		}
-	// 	}
-	// }
-	
 	/**
 	 * Register for global events
 	 *
@@ -71,8 +70,8 @@ export default class Dom {
 	/**
 	 * Unregister for global events
 	 *
-	 * @param type
-	 * @param listener
+	 * @param {string} type
+	 * @param {function} listener
 	 */
 	static unregister(type, listener) {
 		window.removeEventListener(type, listener);
@@ -81,10 +80,17 @@ export default class Dom {
 	/**
 	 * Request animation frame
 	 *
-	 * @param callback
+	 * @param {function} callback
 	 */
 	static nextFrame(callback) {
 		window.requestAnimationFrame(callback);
+	}
+	
+	/**
+	 * @returns {Promise}
+	 */
+	static exitFullscreen() {
+		return document.exitFullscreen();
 	}
 	
 }
