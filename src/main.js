@@ -5,44 +5,29 @@
  * GPL Licensed
  */
 
-import './styles.css';
+import './styles.scss';
 import XEngine from './model/x-engine';
 import XGraph from './model/x-graph';
-import {Vec2, XMath} from './model/x-math';
+import XMath from './model/x-math';
 import XMouse from './model/x-mouse';
 import XKeyboard from './model/x-keyboard';
 import Configs from './configs';
 import Linker from './model/linker';
 import Dom from './model/dom';
+import GeoFun from './view/geo-fun';
+import {Vec2} from './model/x-geo';
+
 
 
 class Main {
-	
-	
-	static inFullscreen = false;
-	
-	static toggleFullscreen() {
-		const handler = (enabled) => {
-			if (enabled !== null) {
-				Main.inFullscreen = enabled;
-				XEngine.log((enabled ? 'Entered' : 'Exited') + ' fullscreen.');
-			}
-		};
-		if (this.inFullscreen) {
-			Linker.exitFullscreenMode(handler);
-		} else {
-			Linker.enterFullscreenMode(handler);
-		}
-	}
-	
 	
 	/**
 	 * Engine initialized handler
 	 * Apply configurations
 	 */
 	static onInit() {
-		XGraph.styler.font = Configs.font;
 		Dom.setCursor(!Configs.hideCursor);
+		XEngine.log('Main Initialized');
 	}
 	
 	/**
@@ -54,14 +39,14 @@ class Main {
 	static onDraw(now, delta) {
 		
 		// Esc to exit
-		if (XKeyboard.isPressed(XKeyboard.KEY.DOM_VK_ESCAPE)) {
-			XEngine.stop();
+		if (XKeyboard.isDown(XKeyboard.KEY.DOM_VK_ESCAPE)) {
+			XEngine.clear();
 			return;
 		}
 		
 		// F to Fullscreen
 		if (XKeyboard.isPressed(XKeyboard.KEY.DOM_VK_F)) {
-			Main.toggleFullscreen();
+			Linker.toggleFullscreen();
 		}
 		
 		// constants
@@ -72,24 +57,35 @@ class Main {
 		// clear
 		XGraph.clearRect();
 		
+		// prepare styler
+		XGraph.styler.font = Configs.font;
+		XGraph.styler.method = 'stroke';
+		XGraph.styler.color = '#ffffff';
+		XGraph.styler.lineWidth = 1;
+		XGraph.styler.textAlign = 'left';
+		
 		// main draw
 		Main.mainDrawII(now, delta);
 		
 		// FPS
-		XGraph.styler.color = '#ffffff';
 		XGraph.styler.textAlign = 'right';
 		XGraph.drawText('FPS: ' + XMath.fps(delta), new Vec2(cWidth - 8, 25));
 		
-		// CURSOR
-		if (Configs.hideCursor && Configs.customCursor) {
-			XGraph.drawPolyline([mousePos.add(3, 15), mousePos, mousePos.add(12, 8)], true);
-		}
-		XGraph.drawText(`(${mousePos.x}, ${mousePos.y})`, new Vec2(cWidth - 8, 50));
-		
 		// info
 		XGraph.drawText(`Esc = exit`, new Vec2(cWidth - 8, 75));
-		let fs = Main.inFullscreen ? '1' : '0';
+		let fs = Linker.inFullscreen ? '1' : '0';
 		XGraph.drawText(`F = Toggle Fullscreen (${fs})`, new Vec2(cWidth - 8, 100));
+		
+		// CURSOR
+		XGraph.drawText(`(${mousePos.x}, ${mousePos.y})`, new Vec2(cWidth - 8, 50));
+		if (Configs.hideCursor && Configs.customCursor) {
+			XGraph.styler.method = 'fill';
+			XGraph.drawPolyline([mousePos.add(3, 15), mousePos, mousePos.add(12, 8)], true);
+			XGraph.styler.method = 'stroke';
+			XGraph.styler.color = '#54a9e0';
+			XGraph.styler.lineWidth = 2;
+			XGraph.styler.draw();
+		}
 	}
 	
 	/**
@@ -100,6 +96,7 @@ class Main {
 	 * @param delta
 	 */
 	static mainDrawII(now, delta) {
+		GeoFun.onDraw.apply(GeoFun, [now, delta]);
 	}
 	
 	/**
@@ -115,6 +112,14 @@ class Main {
 	 */
 	static onExit() {
 		XEngine.log('Exited');
+		let restart = () => {
+			Dom.clearMessage();
+			Main.start();
+		};
+		let btn = Dom.create('button', {onclick: restart, 'class': 'action'}, 'Restart');
+		let msg = Dom.create('div', {}, 'Exited.<br>\nReleased all reserved resources.<br>');
+		msg.append(btn);
+		Dom.showMessage(msg);
 	}
 	
 	/**

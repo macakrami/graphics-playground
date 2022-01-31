@@ -5,7 +5,7 @@
  * GPL Licensed
  */
 
-import {Frame, Vec2} from './x-math';
+import {Frame, Vec2} from './x-geo';
 import Styler from './styler';
 import Linker from './linker';
 
@@ -16,6 +16,10 @@ export default class XGraph {
 	static styler;
 	
 	static init() {
+		this.initStyler();
+	}
+	
+	static initStyler() {
 		this.styler = new Styler({
 			ctx: Linker.ctx,
 			method: 'stroke',

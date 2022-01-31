@@ -5,6 +5,8 @@
  * GPL Licensed
  */
 
+import Util from './util';
+
 /**
  * Wrapper class around 2D Context methods
  */
@@ -24,13 +26,7 @@ export default class Styler {
 	lineWidth;
 	
 	constructor(options) {
-		if (typeof options === 'object') {
-			for (let k in options) {
-				if (options.hasOwnProperty(k)) {
-					this[k] = options[k];
-				}
-			}
-		}
+		Util.copyFields(options, this);
 		if (!this.ctx) {
 			throw new Error('No ctx');
 		}

@@ -6,6 +6,7 @@
  */
 
 import Dom from './dom';
+import Util from './util';
 
 /**
  * Keyboard input wrapper
@@ -19,6 +20,7 @@ export default class XKeyboard {
 	 * Enable keyboard input listener
 	 */
 	static enable() {
+		this.reset();
 		Dom.register('keydown', XKeyboard._listener);
 		Dom.register('keyup', XKeyboard._listener);
 	}
@@ -29,6 +31,7 @@ export default class XKeyboard {
 	static disable() {
 		Dom.unregister('keydown', XKeyboard._listener);
 		Dom.unregister('keyup', XKeyboard._listener);
+		this.reset();
 	}
 	
 	/**
@@ -63,11 +66,13 @@ export default class XKeyboard {
 	 * Store last values
 	 */
 	static updateLastDown() {
-		for (let k in this.keyState) {
-			if (this.keyState.hasOwnProperty(k)) {
-				this.keyStateLast[k] = this.keyState[k];
-			}
-		}
+		Util.copyFields(this.keyState, this.keyStateLast);
+	}
+	
+	
+	static reset() {
+		this.keyState = {};
+		this.keyStateLast = {};
 	}
 	
 	/**

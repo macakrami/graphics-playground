@@ -5,7 +5,7 @@
  * GPL Licensed
  */
 
-import {Vec2} from './x-math';
+import {Vec2} from './x-geo';
 import Dom from './dom';
 
 export default class XMouse {
