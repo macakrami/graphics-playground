@@ -10,34 +10,55 @@ import XMouse from './x-mouse';
 import XGraph from './x-graph';
 import XKeyboard from './x-keyboard';
 import Dom from './dom';
+import Util from './util';
+import RCX from './render-context';
+import EventManager from './event-manager';
+
 
 /**
  * 2D Engine
  */
 export default class XEngine {
-	static _onDraw;
-	static _onStop;
-	static _onExit;
+	
+	static E_INIT = 'x.init';
+	static E_DRAW = 'x.draw';
+	static E_STOP = 'x.stop';
+	static E_EXIT = 'x.exit';
+	
 	static _running = false;
 	
 	/**
 	 * Initialize engine
-	 *
-	 * @param {function} onInit
-	 * @param {function} onDraw
-	 * @param {function} onStop
-	 * @param {function} onExit
-	 * @param {HTMLElement} root
 	 */
-	static init(onInit, onDraw, onStop, onExit, root) {
+	static init() {
 		this.log('Initializing...');
-		this._onDraw = onDraw;
-		this._onStop = onStop;
-		this._onExit = onExit;
 		Linker.init();
-		Linker.attach(root);
+		Linker.attach();
 		XGraph.init();
-		onInit();
+		EventManager.trigger(XEngine.E_INIT);
+	}
+	
+	/**
+	 * Update common context RCX variables
+	 * @see RCX
+	 *
+	 * @param now
+	 * @param delta
+	 */
+	static updateRCX(now, delta) {
+		// constants
+		const {canvas, ctx} = Linker;
+		// update context
+		Util.copyFields({
+			now,
+			delta,
+			canvas,
+			ctx,
+			styler: XGraph.styler,
+			cW: canvas.width,
+			cH: canvas.height,
+			mPos: XMouse.position,
+		}, RCX);
 	}
 	
 	/**
@@ -65,7 +86,7 @@ export default class XEngine {
 		this.log('Stopping...');
 		XMouse.disable();
 		XKeyboard.disable();
-		this._onStop();
+		EventManager.trigger(XEngine.E_STOP);
 	}
 	
 	/**
@@ -76,10 +97,7 @@ export default class XEngine {
 		XGraph.clear();
 		Linker.detach();
 		Linker.clear();
-		this._onExit();
-		this._onDraw = null;
-		this._onStop = null;
-		this._onExit = null;
+		EventManager.trigger(XEngine.E_EXIT);
 	}
 	
 	/**
@@ -94,7 +112,8 @@ export default class XEngine {
 			now = new Date();
 			delta = (now - lastDraw);
 			lastDraw = now;
-			XEngine._onDraw(now, delta);
+			XEngine.updateRCX(now, delta);
+			EventManager.trigger(XEngine.E_DRAW);
 			XKeyboard.updateLastDown();
 			Dom.nextFrame(loop);
 		};

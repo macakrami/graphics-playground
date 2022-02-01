@@ -55,5 +55,18 @@ export default class XMath {
 		return d * this.PI / 180;
 	}
 	
+	/**
+	 * Makes sure radian stays between 0-Pi2
+	 *
+	 * @param r
+	 * @returns {number}
+	 */
+	static radianClip(r) {
+		while (r < 0) {
+			r += this.PIx2;
+		}
+		return r % this.PIx2;
+	}
+	
 }
 

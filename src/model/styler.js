@@ -24,12 +24,26 @@ export default class Styler {
 	textAlign;
 	/** @var {number} */
 	lineWidth;
+	/** @var {CanvasLineCap} */
+	lineCap; // "butt" || "round" || "square"
 	
+	/**
+	 * @param {object} options
+	 */
 	constructor(options) {
 		Util.copyFields(options, this);
 		if (!this.ctx) {
 			throw new Error('No ctx');
 		}
+	}
+	
+	/**
+	 * @param {object} options
+	 * @return this
+	 */
+	set(options) {
+		Util.copyFields(options, this);
+		return this;
 	}
 	
 	/**
@@ -41,7 +55,7 @@ export default class Styler {
 		if (this.font) this.ctx.font = this.font;
 		if (this.textAlign) this.ctx.textAlign = this.textAlign;
 		if (this.lineWidth) this.ctx.lineWidth = this.lineWidth;
-		//.lineCap = "butt" || "round" || "square";
+		if (this.lineCap) this.ctx.lineCap = this.lineCap;
 	}
 	
 	/**

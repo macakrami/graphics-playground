@@ -32,7 +32,7 @@ export default class Dom {
 	/**
 	 * @param {string} type
 	 * @param {object} [props]
-	 * @param {string|HTMLElement} [content]
+	 * @param {string | HTMLElement | HTMLElement[]} [content]
 	 * @returns {HTMLElement}
 	 */
 	static create(type, props, content) {
@@ -43,11 +43,7 @@ export default class Dom {
 			element.classList.add(cls);
 		}
 		Util.copyFields(props, element);
-		if (typeof content === 'string') {
-			element.innerHTML = content;
-		} else if (typeof content === 'object' && content !== null) {
-			element.append(content);
-		}
+		Util.elementSetContent(element, content);
 		return element;
 	}
 	
@@ -61,7 +57,7 @@ export default class Dom {
 	/**
 	 * Show or Hide cursor
 	 *
-	 * @param {boolean} show
+	 * @param {boolean} [show]
 	 */
 	static setCursor(show) {
 		if (typeof show === 'undefined') {

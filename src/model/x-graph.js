@@ -10,19 +10,22 @@ import Styler from './styler';
 import Linker from './linker';
 import XMath from './x-math';
 
-// REView
+/**
+ * Mainly 2D drawings
+ */
 export default class XGraph {
 	
 	/** @var {Styler} */
 	static styler;
-	static variables = {};
+	/** @var {CanvasRenderingContext2D} */
+	static ctx;
 	
+	/**
+	 * Initialize XGraph
+	 */
 	static init() {
-		this.initStyler();
-	}
-	
-	static initStyler() {
-		this.styler = new Styler({
+		XGraph.ctx = Linker.ctx;
+		XGraph.styler = new Styler({
 			ctx: Linker.ctx,
 			method: 'stroke',
 			color: '#fff',
@@ -31,7 +34,7 @@ export default class XGraph {
 	}
 	
 	static clear() {
-		this.styler = null;
+		XGraph.styler = null;
 	}
 	
 	/**
@@ -41,24 +44,25 @@ export default class XGraph {
 	 * @param {Vec2} p4
 	 */
 	static drawRectangle(p1, p2, p3, p4) {
-		this.drawPolyline([p1, p2, p3, p4], true);
+		XGraph.drawPolyline([p1, p2, p3, p4], true);
 	}
 	
 	/**
 	 * @param {Frame} frame
 	 */
 	static drawFrame(frame) {
+		const {styler, ctx} = XGraph;
 		let x1 = frame.point.x;
 		let y1 = frame.point.y;
 		let x2 = x1 + frame.size.x;
 		let y2 = y1 + frame.size.y;
-		this.styler.ctx.beginPath();
-		this.styler.ctx.moveTo(x1, y1);
-		this.styler.ctx.lineTo(x2, y1);
-		this.styler.ctx.lineTo(x2, y2);
-		this.styler.ctx.lineTo(x1, y2);
-		this.styler.ctx.closePath();
-		this.styler.draw();
+		ctx.beginPath();
+		ctx.moveTo(x1, y1);
+		ctx.lineTo(x2, y1);
+		ctx.lineTo(x2, y2);
+		ctx.lineTo(x1, y2);
+		ctx.closePath();
+		styler.draw();
 	}
 	
 	/**
@@ -66,9 +70,10 @@ export default class XGraph {
 	 * @param {number} radius
 	 */
 	static drawCircle(p, radius) {
-		this.styler.ctx.beginPath();
-		this.styler.ctx.arc(p.x, p.y, radius, 0, XMath.PIx2);
-		this.styler.draw();
+		const {styler, ctx} = XGraph;
+		ctx.beginPath();
+		ctx.arc(p.x, p.y, radius, 0, XMath.PIx2);
+		styler.draw();
 	}
 	
 	/**
@@ -76,7 +81,7 @@ export default class XGraph {
 	 * @param {Vec2} p
 	 */
 	static drawText(text, p) {
-		this.styler.drawText(text, p.x, p.y);
+		XGraph.styler.drawText(text, p.x, p.y);
 	}
 	
 	/**
@@ -84,35 +89,37 @@ export default class XGraph {
 	 * @param shouldClose
 	 */
 	static drawPolyline(points, shouldClose) {
+		const {styler, ctx} = XGraph;
 		let i, p, len = points.length;
-		this.styler.ctx.beginPath();
+		ctx.beginPath();
 		for (i = 0; i < len; i++) {
 			p = points[i];
 			if (i === 0) {
-				this.styler.ctx.moveTo(p.x, p.y);
+				ctx.moveTo(p.x, p.y);
 			} else {
-				this.styler.ctx.lineTo(p.x, p.y);
+				ctx.lineTo(p.x, p.y);
 			}
 		}
-		if (shouldClose) this.styler.ctx.closePath();
-		this.styler.draw();
+		if (shouldClose) ctx.closePath();
+		styler.draw();
 	}
 	
 	/**
 	 * @param {Polygon} poly
 	 */
 	static drawPolygon(poly) {
-		this.drawPolyline(poly.ps, true);
+		XGraph.drawPolyline(poly.ps, true);
 	}
 	
 	/**
 	 * @param {Line} line
 	 */
 	static drawLine(line) {
-		this.styler.ctx.beginPath();
-		this.styler.ctx.moveTo(line.p1.x, line.p1.y);
-		this.styler.ctx.lineTo(line.p2.x, line.p2.y);
-		this.styler.draw();
+		const {styler, ctx} = XGraph;
+		ctx.beginPath();
+		ctx.moveTo(line.p1.x, line.p1.y);
+		ctx.lineTo(line.p2.x, line.p2.y);
+		styler.draw();
 	}
 	
 	/**
@@ -121,7 +128,7 @@ export default class XGraph {
 	static drawLines(lines) {
 		let i, len = lines.length;
 		for (i = 0; i < len; i++) {
-			this.drawLine(lines[i]);
+			XGraph.drawLine(lines[i]);
 		}
 	}
 	
@@ -129,12 +136,13 @@ export default class XGraph {
 	 * @param {Triangle} tri
 	 */
 	static drawTriangle(tri) {
-		this.styler.ctx.beginPath();
-		this.styler.ctx.moveTo(tri.p1.x, tri.p1.y);
-		this.styler.ctx.lineTo(tri.p2.x, tri.p2.y);
-		this.styler.ctx.lineTo(tri.p3.x, tri.p3.y);
-		this.styler.ctx.closePath();
-		this.styler.draw();
+		const {styler, ctx} = XGraph;
+		ctx.beginPath();
+		ctx.moveTo(tri.p1.x, tri.p1.y);
+		ctx.lineTo(tri.p2.x, tri.p2.y);
+		ctx.lineTo(tri.p3.x, tri.p3.y);
+		ctx.closePath();
+		styler.draw();
 	}
 	
 	/**
@@ -142,19 +150,21 @@ export default class XGraph {
 	 * @param {string} [color] Html color
 	 */
 	static drawPoint(p, color) {
+		const {ctx} = XGraph;
 		if (color) {
-			this.styler.ctx.fillStyle = color;
-			this.styler.ctx.lineWidth = 1;
+			ctx.fillStyle = color;
+			ctx.lineWidth = 1;
 		}
-		this.styler.ctx.fillRect(p.x, p.y, 1, 1);
+		ctx.fillRect(p.x, p.y, 1, 1);
 	}
 	
 	/**
 	 * @param {string} [color] Html color
 	 */
 	static clearRect(color) {
-		this.styler.ctx.fillStyle = color || '#000';
-		this.styler.ctx.fillRect(0, 0, Linker.canvas.width, Linker.canvas.height);
+		const {ctx} = XGraph;
+		ctx.fillStyle = color || '#000';
+		ctx.fillRect(0, 0, Linker.canvas.width, Linker.canvas.height);
 	}
 	
 	/**
@@ -171,7 +181,7 @@ export default class XGraph {
 		let p2 = p1.add(diffX, 0);
 		let p3 = line.p2;
 		let p4 = p1.add(0, diffY);
-		this.drawRectangle(p1, p2, p3, p4);
+		XGraph.drawRectangle(p1, p2, p3, p4);
 	}
 	
 	/**
