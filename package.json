@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "description": "Graphics playground",
     "author": "Mac Akrami",
-    "license": "ISC",
+    "license": "MIT",
     "keywords": [
         "canvas",
         "2d",
@@ -13,6 +13,7 @@
         "clean-dist": "rm -rf dist/*",
         "ff-show": "sleep 1;open -a /Applications/Firefox.app dist/index.html",
         "build-dev": "npm run clean-dist && webpack --mode=development",
+        "build-dev-show": "npm run build-dev && npm run ff-show",
         "build-prod": "npm run clean-dist && webpack --mode=production",
         "start-dev": "webpack serve --mode=development"
     },
@@ -28,6 +29,8 @@
         "css-loader": "^6.5.1",
         "html-inline-script-webpack-plugin": "^2.0.3",
         "html-webpack-plugin": "^5.5.0",
+        "sass": "^1.49.0",
+        "sass-loader": "^12.4.0",
         "style-loader": "^3.3.1",
         "webpack": "^5.67.0",
         "webpack-cli": "^4.9.2",

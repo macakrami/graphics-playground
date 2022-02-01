@@ -1,28 +1,52 @@
+/*
+ * graphics-playground
+ * x-mouse.js
+ * Copyright (c) 2022 Mac Akrami
+ * MIT Licensed
+ */
 
-import {Vec2} from './x-math';
+import {Vec2} from './x-geo';
+import Dom from './dom';
 
 export default class XMouse {
+	
+	/** @var {boolean} */
 	static left;
+	
+	/** @var {boolean} */
 	static middle;
+	
+	/** @var {boolean} */
 	static right;
+	
+	/** @var {Vec2} */
 	static position;
 	
+	/**
+	 * Enable updating mouse input vars
+	 */
 	static enable() {
 		this.reset();
-		window.addEventListener('mousedown', XMouse._updateButtons, false);
-		window.addEventListener('mouseup', XMouse._updateButtons, false);
-		window.addEventListener('mousemove', XMouse._updateButtons, false);
-		window.addEventListener('contextmenu', XMouse._menu, false);
+		Dom.register('mousedown', XMouse._updateButtons);
+		Dom.register('mouseup', XMouse._updateButtons);
+		Dom.register('mousemove', XMouse._updateButtons);
+		Dom.register('contextmenu', XMouse._menu);
 	}
 	
+	/**
+	 * Disable updating
+	 */
 	static disable() {
-		window.removeEventListener('mousedown', XMouse._updateButtons);
-		window.removeEventListener('mouseup', XMouse._updateButtons);
-		window.removeEventListener('mousemove', XMouse._updateButtons);
-		window.removeEventListener('contextmenu', XMouse._menu);
+		Dom.unregister('mousedown', XMouse._updateButtons);
+		Dom.unregister('mouseup', XMouse._updateButtons);
+		Dom.unregister('mousemove', XMouse._updateButtons);
+		Dom.unregister('contextmenu', XMouse._menu);
 		this.reset();
 	}
 	
+	/**
+	 * Initialize vars
+	 */
 	static reset() {
 		this.left = false;
 		this.middle = false;
@@ -30,24 +54,47 @@ export default class XMouse {
 		this.position = new Vec2();
 	}
 	
-	
-	static _updateButtons(e) {
-		e.preventDefault();
-		const button = {};
-		if (e.type === 'mousedown') {
-			button[e.which] = true;
+	/**
+	 * MouseEvent handler
+	 *
+	 * https://developer.mozilla.org/en-US/docs/web/api/mouseevent/button
+	 * https://developer.mozilla.org/en-US/docs/Web/API/UIEvent/which
+	 *
+	 * @param {MouseEvent} event
+	 * @private
+	 */
+	static _updateButtons(event) {
+		event.preventDefault();
+		const {type, button, which, offsetX, offsetY} = event;
+		const btn = {};
+		let index;
+		if (typeof button !== 'undefined') {
+			index = button + 1;
+		} else if (typeof which !== 'undefined') {
+			index = which;
+		} else {
+			throw new Error('Invalid mouse event');
 		}
-		if (e.type === 'mouseup') {
-			button[e.which] = false;
+		if (type === 'mousedown') {
+			btn[index] = true;
 		}
-		XMouse.left = !!button[1];
-		XMouse.middle = !!button[2];
-		XMouse.right = !!button[3];
-		XMouse.position = new Vec2(e.offsetX, e.offsetY);
+		if (type === 'mouseup') {
+			btn[index] = false;
+		}
+		XMouse.left = !!btn[1];
+		XMouse.middle = !!btn[2];
+		XMouse.right = !!btn[3];
+		XMouse.position = new Vec2(offsetX, offsetY);
 	}
 	
+	/**
+	 * Context Menu handler
+	 * Blocks right click menu
+	 *
+	 * @param e
+	 * @private
+	 */
 	static _menu(e) {
 		e.preventDefault();
 	}
-	
 }

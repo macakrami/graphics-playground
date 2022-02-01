@@ -1,22 +1,37 @@
+/*
+ * graphics-playground
+ * x-keyboard.js
+ * Copyright (c) 2022 Mac Akrami
+ * MIT Licensed
+ */
 
+import Dom from './dom';
+import Util from './util';
+
+/**
+ * Keyboard input wrapper
+ */
 export default class XKeyboard {
 	
 	static keyState = {};
+	static keyStateLast = {};
 	
 	/**
 	 * Enable keyboard input listener
 	 */
 	static enable() {
-		window.addEventListener('keydown', XKeyboard._listener, false);
-		window.addEventListener('keyup', XKeyboard._listener, false);
+		this.reset();
+		Dom.register('keydown', XKeyboard._listener);
+		Dom.register('keyup', XKeyboard._listener);
 	}
 	
 	/**
 	 * Disable keyboard input listener
 	 */
 	static disable() {
-		window.removeEventListener('keydown', XKeyboard._listener);
-		window.removeEventListener('keyup', XKeyboard._listener);
+		Dom.unregister('keydown', XKeyboard._listener);
+		Dom.unregister('keyup', XKeyboard._listener);
+		this.reset();
 	}
 	
 	/**
@@ -30,6 +45,16 @@ export default class XKeyboard {
 	}
 	
 	/**
+	 * Check where or not a key is pressed, and is true once per draw/frame.
+	 *
+	 * @param {number} code Key code to check
+	 * @returns {boolean}
+	 */
+	static isPressed(code) {
+		return this.isDown(code) && !this.keyStateLast[code];
+	}
+	
+	/**
 	 *
 	 * @param {KeyboardEvent} event
 	 */
@@ -37,7 +62,22 @@ export default class XKeyboard {
 		XKeyboard.keyState[event.keyCode] = event.type === 'keydown';
 	}
 	
+	/**
+	 * Store last values
+	 */
+	static updateLastDown() {
+		Util.copyFields(this.keyState, this.keyStateLast);
+	}
 	
+	
+	static reset() {
+		this.keyState = {};
+		this.keyStateLast = {};
+	}
+	
+	/**
+	 * Keyboard key codes
+	 */
 	static KEY = {
 		DOM_VK_CANCEL: 3,
 		DOM_VK_HELP: 6,

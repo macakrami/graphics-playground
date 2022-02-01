@@ -1,15 +1,24 @@
+/*
+ * graphics-playground
+ * webpack.config.js
+ * Copyright (c) 2022 Mac Akrami
+ * MIT Licensed
+ */
 
 const {resolve} = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlInlineScriptPlugin = require('html-inline-script-webpack-plugin');
 
-
+// entry file path
 const entryFilePath = resolve(__dirname, `src/main.js`);
+// simple html template file path
 const inputHtmlPath = resolve(__dirname, 'src/index.html');
+// output dir path
 const outputDirPath = resolve(__dirname, 'dist');
+// output result html file name
 const outputHtmlFilename = 'index.html';
 
-
+// webpack config
 module.exports = {
 	
 	target: ['web', 'es6'],
@@ -25,8 +34,8 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				test: /\.css$/i,
-				use: ['style-loader', 'css-loader'],
+				test: /\.scss$/i,
+				use: ['style-loader', 'css-loader', 'sass-loader'],
 			}
 		]
 	},
@@ -49,6 +58,4 @@ module.exports = {
 		port: 3001,
 		open: true,
 	},
-
 }
-

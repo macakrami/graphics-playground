@@ -1,6 +1,16 @@
+/*
+ * graphics-playground
+ * styles.css
+ * Copyright (c) 2022 Mac Akrami
+ * MIT Licensed
+ */
+
+html, body {
+	margin: 0 !important;
+	padding: 0 !important;
+}
 
 body {
-	margin: 0;
 	background-color: #000;
 	color: #fff;
 	font-family: "Courier New", monospace;
@@ -24,5 +34,15 @@ canvas {
 	margin: auto;
 	width: 100%;
 	height: 100%;
-	/*border: solid 1px gray;*/
+}
+
+.message {
+	margin: auto;
+	text-align: center;
+}
+
+.action {
+	padding: 4px 13px;
+	cursor: pointer;
+	margin: 5px;
 }
