@@ -2,7 +2,7 @@
  * graphics-playground
  * x-engine.js
  * Copyright (c) 2022 Mac Akrami
- * GPL Licensed
+ * MIT Licensed
  */
 
 import Linker from './linker';

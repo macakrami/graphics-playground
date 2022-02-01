@@ -2,7 +2,7 @@
  * graphics-playground
  * main.js
  * Copyright (c) 2022 Mac Akrami
- * GPL Licensed
+ * MIT Licensed
  */
 
 import './styles.scss';
@@ -20,15 +20,6 @@ import {Vec2} from './model/x-geo';
 
 
 class Main {
-	
-	/**
-	 * Engine initialized handler
-	 * Apply configurations
-	 */
-	static onInit() {
-		Dom.setCursor(!Configs.hideCursor);
-		XEngine.log('Main Initialized');
-	}
 	
 	/**
 	 * Draw handler
@@ -53,6 +44,7 @@ class Main {
 		const {canvas, ctx} = Linker;
 		const {width: cWidth, height: cHeight} = canvas;
 		const mousePos = XMouse.position;
+		let i, len;
 		
 		// clear
 		XGraph.clearRect();
@@ -64,20 +56,27 @@ class Main {
 		XGraph.styler.lineWidth = 1;
 		XGraph.styler.textAlign = 'left';
 		
+		// corner text prep
+		XGraph.variables.cornerText = [];
+		
+		let FPS = XMath.fps(delta);
+		let FS = Linker.inFullscreen ? 'ON' : 'OFF';
+		XGraph.variables.cornerText.push(`FPS: ${FPS}`);
+		XGraph.variables.cornerText.push(`Esc = exit`);
+		XGraph.variables.cornerText.push(`F = Toggle Fullscreen (${FS})`);
+		XGraph.variables.cornerText.push(`(${mousePos.x}, ${mousePos.y})`);
+		
 		// main draw
 		Main.mainDrawII(now, delta);
 		
-		// FPS
+		// draw corner texts
 		XGraph.styler.textAlign = 'right';
-		XGraph.drawText('FPS: ' + XMath.fps(delta), new Vec2(cWidth - 8, 25));
+		len = XGraph.variables.cornerText.length;
+		for (i = 0; i < len; i++) {
+			XGraph.drawText(XGraph.variables.cornerText[i], new Vec2(cWidth- 8, (i + 1) * 25));
+		}
 		
-		// info
-		XGraph.drawText(`Esc = exit`, new Vec2(cWidth - 8, 75));
-		let fs = Linker.inFullscreen ? '1' : '0';
-		XGraph.drawText(`F = Toggle Fullscreen (${fs})`, new Vec2(cWidth - 8, 100));
-		
-		// CURSOR
-		XGraph.drawText(`(${mousePos.x}, ${mousePos.y})`, new Vec2(cWidth - 8, 50));
+		// custom cursor
 		if (Configs.hideCursor && Configs.customCursor) {
 			XGraph.styler.method = 'fill';
 			XGraph.drawPolyline([mousePos.add(3, 15), mousePos, mousePos.add(12, 8)], true);
@@ -97,6 +96,16 @@ class Main {
 	 */
 	static mainDrawII(now, delta) {
 		GeoFun.onDraw.apply(GeoFun, [now, delta]);
+	}
+	
+	
+	/**
+	 * Engine initialized handler
+	 * Apply configurations
+	 */
+	static onInit() {
+		Dom.setCursor(!Configs.hideCursor);
+		XEngine.log('Main Initialized');
 	}
 	
 	/**

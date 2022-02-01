@@ -2,7 +2,7 @@
  * graphics-playground
  * x-geo.js
  * Copyright (c) 2022 Mac Akrami
- * GPL Licensed
+ * MIT Licensed
  */
 
 import XMath from './x-math';
@@ -126,7 +126,23 @@ export class Line {
 
 
 /**
- * 2D Triangle class
+ * Polygon class
+ */
+export class Polygon {
+	/** @var {Vec2[]} */
+	ps;
+	
+	/**
+	 * @param {Vec2[]} ps
+	 */
+	constructor(ps) {
+		this.ps = ps || [];
+	}
+}
+
+
+/**
+ * Triangle class
  */
 export class Triangle {
 	/** @var {Vec2} */
@@ -215,7 +231,6 @@ export class Frame {
  */
 export class Geometry {
 	
-	
 	/**
 	 * Line segment intersect detection
 	 * @see https://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
@@ -280,6 +295,29 @@ export class Geometry {
 		let t = (tri.p3.y - tri.p1.y) * dX + (tri.p1.x - tri.p3.x) * dY;
 		if (D < 0) return s <= 0 && t <= 0 && s + t >= D;
 		return s >= 0 && t >= 0 && s + t <= D;
+	}
+	
+	
+	/**
+	 * PNPOLY
+	 * @see https://wrf.ecse.rpi.edu/Research/Short_Notes/pnpoly.html
+	 * @see https://stackoverflow.com/questions/22521982/check-if-point-is-inside-a-polygon
+	 *
+	 * @param {Vec2} p
+	 * @param {Polygon} poly
+	 * @returns {boolean}
+	 */
+	static point_in_polygon(p, poly) {
+		let i, j, len, inside = false;
+		const {ps} = poly;
+		len = ps.length;
+		for (i = 0, j = len - 1; i < len; j = i++) {
+			if (ps[i].y > p.y !== ps[j].y > p.y &&
+				p.x < (ps[j].x - ps[i].x) * (p.y - ps[i].y) / (ps[j].y - ps[i].y) + ps[i].x) {
+				inside = !inside;
+			}
+		}
+		return inside;
 	}
 	
 }

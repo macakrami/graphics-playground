@@ -2,7 +2,7 @@
  * graphics-playground
  * linker.js
  * Copyright (c) 2022 Mac Akrami
- * GPL Licensed
+ * MIT Licensed
  */
 
 import Dom from './dom';

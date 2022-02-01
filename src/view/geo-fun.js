@@ -2,13 +2,14 @@
  * graphics-playground
  * geo-fun.js
  * Copyright (c) 2022 Mac Akrami
- * GPL Licensed
+ * MIT Licensed
  */
 
 import Linker from '../model/linker';
 import XMouse from '../model/x-mouse';
 import {Line, Vec2, Geometry} from '../model/x-geo';
 import XGraph from '../model/x-graph';
+import XMath from '../model/x-math';
 
 
 export default class GeoFun {
@@ -21,19 +22,42 @@ export default class GeoFun {
 		const {width: cWidth, height: cHeight} = Linker.canvas;
 		const mousePos = XMouse.position;
 		
-		let i, len;
-		let r, rr, r2 = Math.PI * 2;
-		
 		
 		// box lines
+		let lines = this.xRectangle(cWidth, cHeight);
+		
+		// mouse related - rotating lines
+		let xLines = this.rotatingLines(mousePos, lines);
+		
+		// slow rotation
+		this.rotation += 0.005;
+		if (this.rotation >= XMath.PIx2) {
+			this.rotation = 0;
+		}
+		
+		
+		XGraph.styler.color = '#e8e745';
+		XGraph.drawLines(lines);
+		XGraph.styler.color = '#cef2fa';
+		XGraph.drawLines(xLines);
+		
+		//rr = XMath.radianToDegree(this.rotation).toFixed(2);
+		//XGraph.variables.cornerText.push(`R = ${rr}`);
+		
+	}
+	
+	
+	static xRectangle(cWidth, cHeight) {
 		let x1 = cWidth * 0.2;
 		let x2 = cWidth * 0.8;
 		let y1 = cHeight * 0.2;
 		let y2 = cHeight * 0.8;
 		let sp = 20;
-		let lines = [
+		return [
 			// top
 			new Line(new Vec2(x1 + sp, y1 - sp), new Vec2(x2 - sp, y1 - sp)),
+			//new Line(new Vec2(x1 + sp, y1 - sp), new Vec2(x2 - sp, y1 - sp)),
+			
 			// left
 			new Line(new Vec2(x1, y1), new Vec2(x1, y2)),
 			// bottom
@@ -41,45 +65,35 @@ export default class GeoFun {
 			// right
 			new Line(new Vec2(x2, y2), new Vec2(x2, y1)),
 		];
-		len = lines.length;
-		XGraph.styler.color = '#e8e745';
-		for (i = 0; i < len; i++) {
-			XGraph.drawLine(lines[i]);
-		}
-		
-		// rotation
-		this.rotation += 0.005;
-		if (this.rotation >= r2) {
-			this.rotation = 0;
-		}
-		
-		
-		// mouse X
-		let count = 3;
-		let length = 3000;
-		let angle = r2 / count;
-		let line, intersect;
-		XGraph.styler.color = '#cef2fa';
-		for (r = 0; r < r2; r += angle) {
+	}
+	
+	
+	static rotatingLines(mp, lines) {
+		let count = 3; // rotating lines count
+		let length = 3000; // line initial length
+		let angle = XMath.PIx2 / count;
+		let line, intersect, xLines = [];
+		let r, rr, i, len = lines.length;
+		for (r = 0; r < XMath.PIx2; r += angle) {
 			
+			// slow rotation
 			rr = r + this.rotation;
-			if (rr > r2) rr -= r2;
+			if (rr > XMath.PIx2) rr -= XMath.PIx2;
 			
-			line = new Line(mousePos, mousePos.nextPoint(rr, length));
+			// initial line
+			line = new Line(mp, mp.nextPoint(rr, length));
 			
 			// check for intersections
 			for (i = 0; i < len; i++) {
 				// if line intersects, trim
 				if (( intersect = Geometry.get_line_intersection(line, lines[i]) )) {
-					line = new Line(mousePos, intersect);
+					line = new Line(mp, intersect);
 				}
 			}
-			XGraph.drawLine(line);
+			xLines.push(line);
 		}
-		
-		// R
-		XGraph.drawText(`R = ${(this.rotation * 100).toFixed(2)}`, new Vec2(cWidth - 8, 125));
-		
+		return xLines;
 	}
+	
 	
 }

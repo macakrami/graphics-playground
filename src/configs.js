@@ -2,7 +2,7 @@
  * graphics-playground
  * configs.js
  * Copyright (c) 2022 Mac Akrami
- * GPL Licensed
+ * MIT Licensed
  */
 
 export default class Configs {

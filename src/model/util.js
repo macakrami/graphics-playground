@@ -2,7 +2,7 @@
  * graphics-playground
  * util.js
  * Copyright (c) 2022 Mac Akrami
- * GPL Licensed
+ * MIT Licensed
  */
 
 

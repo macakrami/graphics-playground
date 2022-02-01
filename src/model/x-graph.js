@@ -2,18 +2,20 @@
  * graphics-playground
  * x-graph.js
  * Copyright (c) 2022 Mac Akrami
- * GPL Licensed
+ * MIT Licensed
  */
 
-import {Frame, Vec2} from './x-geo';
+import {Frame, Polygon, Line, Triangle, Vec2} from './x-geo';
 import Styler from './styler';
 import Linker from './linker';
+import XMath from './x-math';
 
 // REView
 export default class XGraph {
 	
 	/** @var {Styler} */
 	static styler;
+	static variables = {};
 	
 	static init() {
 		this.initStyler();
@@ -43,7 +45,6 @@ export default class XGraph {
 	}
 	
 	/**
-	 *
 	 * @param {Frame} frame
 	 */
 	static drawFrame(frame) {
@@ -60,16 +61,28 @@ export default class XGraph {
 		this.styler.draw();
 	}
 	
+	/**
+	 * @param {Vec2} p
+	 * @param {number} radius
+	 */
 	static drawCircle(p, radius) {
 		this.styler.ctx.beginPath();
-		this.styler.ctx.arc(p.x, p.y, radius, 0, 2 * Math.PI);
+		this.styler.ctx.arc(p.x, p.y, radius, 0, XMath.PIx2);
 		this.styler.draw();
 	}
 	
+	/**
+	 * @param {string} text
+	 * @param {Vec2} p
+	 */
 	static drawText(text, p) {
 		this.styler.drawText(text, p.x, p.y);
 	}
 	
+	/**
+	 * @param points
+	 * @param shouldClose
+	 */
 	static drawPolyline(points, shouldClose) {
 		let i, p, len = points.length;
 		this.styler.ctx.beginPath();
@@ -85,6 +98,16 @@ export default class XGraph {
 		this.styler.draw();
 	}
 	
+	/**
+	 * @param {Polygon} poly
+	 */
+	static drawPolygon(poly) {
+		this.drawPolyline(poly.ps, true);
+	}
+	
+	/**
+	 * @param {Line} line
+	 */
 	static drawLine(line) {
 		this.styler.ctx.beginPath();
 		this.styler.ctx.moveTo(line.p1.x, line.p1.y);
@@ -92,6 +115,19 @@ export default class XGraph {
 		this.styler.draw();
 	}
 	
+	/**
+	 * @param {Line[]} lines
+	 */
+	static drawLines(lines) {
+		let i, len = lines.length;
+		for (i = 0; i < len; i++) {
+			this.drawLine(lines[i]);
+		}
+	}
+	
+	/**
+	 * @param {Triangle} tri
+	 */
 	static drawTriangle(tri) {
 		this.styler.ctx.beginPath();
 		this.styler.ctx.moveTo(tri.p1.x, tri.p1.y);
@@ -101,6 +137,10 @@ export default class XGraph {
 		this.styler.draw();
 	}
 	
+	/**
+	 * @param {Vec2} p
+	 * @param {string} [color] Html color
+	 */
 	static drawPoint(p, color) {
 		if (color) {
 			this.styler.ctx.fillStyle = color;
@@ -109,11 +149,17 @@ export default class XGraph {
 		this.styler.ctx.fillRect(p.x, p.y, 1, 1);
 	}
 	
+	/**
+	 * @param {string} [color] Html color
+	 */
 	static clearRect(color) {
 		this.styler.ctx.fillStyle = color || '#000';
 		this.styler.ctx.fillRect(0, 0, Linker.canvas.width, Linker.canvas.height);
 	}
 	
+	/**
+	 * @param {Line} line
+	 */
 	static drawLineAsRectangle(line) {
 		let x1 = line.p1.x;
 		let y1 = line.p1.y;
@@ -128,16 +174,27 @@ export default class XGraph {
 		this.drawRectangle(p1, p2, p3, p4);
 	}
 	
+	/**
+	 * @returns {Frame}
+	 */
 	static getMainFrame() {
 		return new Frame(0, 0, Linker.canvas.width, Linker.canvas.height);
 	}
 	
+	/**
+	 * @param {number} width
+	 * @param {number} height
+	 * @returns {Frame}
+	 */
 	static getCenterFrame(width, height) {
 		let x = (Linker.canvas.width - width) / 2;
 		let y = (Linker.canvas.height - height) / 2;
 		return new Frame(x, y, width, height);
 	}
 	
+	/**
+	 * @returns {Vec2}
+	 */
 	static getCanvasSize() {
 		return new Vec2(Linker.canvas.width, Linker.canvas.height);
 	}

@@ -2,7 +2,7 @@
  * graphics-playground
  * x-mouse.js
  * Copyright (c) 2022 Mac Akrami
- * GPL Licensed
+ * MIT Licensed
  */
 
 import {Vec2} from './x-geo';

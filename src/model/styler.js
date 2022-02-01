@@ -2,7 +2,7 @@
  * graphics-playground
  * styler.js
  * Copyright (c) 2022 Mac Akrami
- * GPL Licensed
+ * MIT Licensed
  */
 
 import Util from './util';
