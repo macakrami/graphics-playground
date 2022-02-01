@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "description": "Graphics playground",
     "author": "Mac Akrami",
-    "license": "ISC",
+    "license": "MIT",
     "keywords": [
         "canvas",
         "2d",
