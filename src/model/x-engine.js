@@ -11,8 +11,9 @@ import XGraph from './x-graph';
 import XKeyboard from './x-keyboard';
 import Dom from './dom';
 import Util from './util';
-import RCX from './render-context';
+import RCX from './rcx';
 import EventManager from './event-manager';
+import Configs from '../app/configs';
 
 
 /**
@@ -45,6 +46,8 @@ export default class XEngine {
 	static mouse;
 	/** @type {XKeyboard} */
 	static keyboard;
+	/** @type {RCX} */
+	static rcx;
 	
 	/**
 	 * Initialize engine
@@ -56,6 +59,7 @@ export default class XEngine {
 		XGraph.init();
 		this.keyboard = new XKeyboard();
 		this.mouse = new XMouse();
+		this.rcx = new RCX();
 		EventManager.trigger(this.E_INIT);
 	}
 	
@@ -80,7 +84,7 @@ export default class XEngine {
 			cH: canvas.height,
 			keyboard: this.keyboard,
 			mouse: this.mouse,
-		}, RCX);
+		}, this.rcx);
 	}
 	
 	/**
@@ -150,9 +154,11 @@ export default class XEngine {
 	 * Custom log function
 	 */
 	static log() {
-		let args = Array.prototype.slice.call(arguments);
-		args.unshift('XEngine:');
-		console.log.apply(this, args);
+		if (Configs.DEBUG) {
+			let args = Array.prototype.slice.call(arguments);
+			args.unshift('XEngine:');
+			console.log.apply(this, args);
+		}
 	}
 	
 }

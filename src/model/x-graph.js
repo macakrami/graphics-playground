@@ -11,7 +11,11 @@ import Linker from './linker';
 import XMath from './x-math';
 
 /**
- * Mainly 2D drawings
+ * Function pack for 2D drawings.
+ *
+ * This class is static, mainly because its methods
+ * will be called in a way that 'this' will not be passed in.
+ * Simply getting around having to bind every method to 'this'.
  */
 export default class XGraph {
 	
@@ -147,15 +151,9 @@ export default class XGraph {
 	
 	/**
 	 * @param {Vec2} p
-	 * @param {string} [color] Html color
 	 */
-	static drawPoint(p, color) {
-		const {ctx} = XGraph;
-		if (color) {
-			ctx.fillStyle = color;
-			ctx.lineWidth = 1;
-		}
-		ctx.fillRect(p.x, p.y, 1, 1);
+	static drawPoint(p) {
+		XGraph.styler.drawDot(p.x, p.y);
 	}
 	
 	/**

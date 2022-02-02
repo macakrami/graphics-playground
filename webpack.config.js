@@ -10,7 +10,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlInlineScriptPlugin = require('html-inline-script-webpack-plugin');
 
 // entry file path
-const entryFilePath = resolve(__dirname, `src/main.js`);
+const entryFilePath = resolve(__dirname, `src/index.js`);
 // simple html template file path
 const inputHtmlPath = resolve(__dirname, 'src/index.html');
 // output dir path

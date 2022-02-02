@@ -17,9 +17,13 @@ export class Vec2 {
 	/** @type {number} */
 	y;
 	
+	/**
+	 * @param {number} [x]
+	 * @param {number} [y]
+	 */
 	constructor(x, y) {
-		this.x = x;
-		this.y = y;
+		this.x = XMath.num(x);
+		this.y = XMath.num(y);
 	}
 	
 	/**

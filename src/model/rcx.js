@@ -1,6 +1,6 @@
 /*
  * graphics-playground
- * render-context.js
+ * rcx.js
  * Copyright (c) 2022 Mac Akrami
  * MIT Licensed
  */
@@ -12,39 +12,39 @@
 export default class RCX {
 	
 	/** @type {XKeyboard} */
-	static keyboard;
+	keyboard;
 	
 	/** @type {XMouse} */
-	static mouse;
+	mouse;
 	
 	/** @type {HTMLCanvasElement} */
-	static canvas;
+	canvas;
 	
 	/** @type {CanvasRenderingContext2D} */
-	static ctx;
+	ctx;
 	
 	/** @type {Styler} */
-	static styler;
+	styler;
 	
 	/** @type {number} */
-	static cW;
+	cW;
 	
 	/** @type {number} */
-	static cH;
+	cH;
 	
 	/** @type {Date} */
-	static now;
+	now;
 	
 	/** @type {number} */
-	static delta;
+	delta;
 	
 	
 	// vars getter + setter
-	static _vars = {};
-	static set(k, v) {
+	_vars = {};
+	set(k, v) {
 		this._vars[k] = v;
 	}
-	static get(k, def) {
+	get(k, def) {
 		return typeof this._vars[k] !== 'undefined' ? this._vars[k] : def;
 	}
 	

@@ -78,7 +78,6 @@ export default class Styler {
 	}
 	
 	/**
-	 *
 	 * @param {string} text
 	 * @param {number} x
 	 * @param {number} y
@@ -92,5 +91,17 @@ export default class Styler {
 			this.ctx.strokeText(text, x, y);
 		}
 	}
+	
+	/**
+	 * @param x
+	 * @param y
+	 * @param [s]
+	 */
+	drawDot(x, y, s) {
+		this.update();
+		if (typeof s !== 'number') s = 1;
+		this.ctx.fillRect(x, y, s, s);
+	}
+	
 	
 }

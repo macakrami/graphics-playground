@@ -6,25 +6,27 @@
  */
 
 
-import BaseView from './base-view';
-import RCX from '../model/render-context';
 import {Vec2} from '../model/x-geo';
-import Configs from '../configs';
+import Configs from '../app/configs';
 import XGraph from '../model/x-graph';
+import ViewAbstract from '../model/view-abstract';
 
-export default class CornerStats extends BaseView {
+/**
+ * Renders the status text on the top right corner
+ */
+export default class CornerStats extends ViewAbstract {
 	
-	// TODO: allow add-text event, listen then show.
+	init() {}
 	
 	onDraw() {
 		
-		const {styler, cW, mouse} = RCX;
-		const {drawText, drawPolyline} = XGraph;
+		const {styler, cW, mouse: {position}} = this.rcx;
+		const {drawText, drawPolyline, drawCircle} = XGraph;
 		
 		// draw corner texts
-		let status = RCX.get('status', null);
+		let status = this.rcx.get('status', null);
 		if (status) {
-			styler.textAlign = 'right';
+			styler.set({color: '#c0ffd2', textAlign: 'right'});
 			status.forEach((text, y) => {
 				drawText(text, new Vec2(cW - 8, (y + 1) * 25));
 			});
@@ -32,13 +34,20 @@ export default class CornerStats extends BaseView {
 		
 		// custom cursor
 		if (Configs.hideCursor && Configs.customCursor) {
-			styler.method = 'fill';
-			drawPolyline([
-				mouse.position.add(3, 15),
-				mouse.position,
-				mouse.position.add(12, 8)
-			], true);
-			styler.set({method: 'stroke', color: '#54a9e0', lineWidth: 2}).draw();
+			// styler.set({method: 'fill', color: '#9a9a9a'});
+			// drawPolyline(
+			// 	[position.add(3, 15), position, position.add(12, 8)],
+			// 	true
+			// );
+			// styler.set({method: 'stroke', color: '#54a9e0', lineWidth: 2});
+			// styler.draw();
+			
+			styler.set({method: 'fill', color: '#000'});
+			drawCircle(position, 20);
+			styler.set({method: 'stroke', color: '#222', lineWidth: 1});
+			drawCircle(position, 20);
+			styler.color = '#555';
+			styler.drawDot(position.x, position.y, 2);
 		}
 	}
 	
