@@ -12,11 +12,14 @@ import XEngine from './x-engine';
  * Handles connection of DOM to Canvas to graphics engine.
  */
 export default class Linker {
-	/** @var {HTMLCanvasElement} */
+	
+	/** @type {HTMLCanvasElement} */
 	static canvas;
-	/** @var {CanvasRenderingContext2D} */
+	
+	/** @type {CanvasRenderingContext2D} */
 	static ctx;
-	/** @var {boolean} */
+	
+	/** @type {boolean} */
 	static inFullscreen = false;
 	
 	/**
@@ -32,10 +35,9 @@ export default class Linker {
 	
 	/**
 	 * Attach to a dom element
-	 * @param {HTMLElement} root
 	 */
-	static attach(root) {
-		root.append(this.canvas);
+	static attach() {
+		Dom.getRoot().append(this.canvas);
 		Dom.register('resize', this.onResize);
 		this.onResize();
 	}
@@ -104,6 +106,26 @@ export default class Linker {
 		} else {
 			this.enterFullscreenMode(handler);
 		}
+	}
+	
+	/**
+	 * Show end screen after engine exited
+	 * @param {function} callback
+	 */
+	static showEndScreen(callback) {
+		Dom.showMessage(
+			Dom.create('div', {}, [
+				'Exited.<br>\nReleased all reserved resources.<br>',
+				Dom.create(
+					'button',
+					{
+						onclick: callback,
+						'class': 'action'
+					},
+					'Restart'
+				)
+			])
+		);
 	}
 	
 }

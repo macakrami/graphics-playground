@@ -10,34 +10,81 @@ import XMouse from './x-mouse';
 import XGraph from './x-graph';
 import XKeyboard from './x-keyboard';
 import Dom from './dom';
+import Util from './util';
+import RCX from './rcx';
+import EventManager from './event-manager';
+import Configs from '../app/configs';
+
 
 /**
  * 2D Engine
  */
 export default class XEngine {
-	static _onDraw;
-	static _onStop;
-	static _onExit;
+	
+	static E_INIT = 'x.init';
+	static E_DRAW = 'x.draw';
+	static E_STOP = 'x.stop';
+	static E_EXIT = 'x.exit';
+	
+	/**
+	 * Whether the engine is running or not
+	 *
+	 * @type {boolean}
+	 * @private
+	 */
 	static _running = false;
 	
 	/**
-	 * Initialize engine
+	 * Frames drawn count
 	 *
-	 * @param {function} onInit
-	 * @param {function} onDraw
-	 * @param {function} onStop
-	 * @param {function} onExit
-	 * @param {HTMLElement} root
+	 * @type {number}
+	 * @private
 	 */
-	static init(onInit, onDraw, onStop, onExit, root) {
+	static _frames;
+	
+	/** @type {XMouse} */
+	static mouse;
+	/** @type {XKeyboard} */
+	static keyboard;
+	/** @type {RCX} */
+	static rcx;
+	
+	/**
+	 * Initialize engine
+	 */
+	static init() {
 		this.log('Initializing...');
-		this._onDraw = onDraw;
-		this._onStop = onStop;
-		this._onExit = onExit;
 		Linker.init();
-		Linker.attach(root);
+		Linker.attach();
 		XGraph.init();
-		onInit();
+		this.keyboard = new XKeyboard();
+		this.mouse = new XMouse();
+		this.rcx = new RCX();
+		EventManager.trigger(this.E_INIT);
+	}
+	
+	/**
+	 * Update common context RCX variables
+	 * @see RCX
+	 *
+	 * @param now
+	 * @param delta
+	 */
+	static updateRCX(now, delta) {
+		// constants
+		const {canvas, ctx} = Linker;
+		// update context
+		Util.copyFields({
+			now,
+			delta,
+			canvas,
+			ctx,
+			styler: XGraph.styler,
+			cW: canvas.width,
+			cH: canvas.height,
+			keyboard: this.keyboard,
+			mouse: this.mouse,
+		}, this.rcx);
 	}
 	
 	/**
@@ -48,8 +95,9 @@ export default class XEngine {
 			return;
 		}
 		this._running = true;
-		XKeyboard.enable();
-		XMouse.enable();
+		this._frames = 0;
+		this.keyboard.enable();
+		this.mouse.enable();
 		this.startLoop();
 		this.log('Started');
 	}
@@ -63,9 +111,10 @@ export default class XEngine {
 		}
 		this._running = false;
 		this.log('Stopping...');
-		XMouse.disable();
-		XKeyboard.disable();
-		this._onStop();
+		this.mouse.disable();
+		this.keyboard.disable();
+		EventManager.trigger(this.E_STOP);
+		console.log(`Stopped. rendered ${this._frames} frames.`);
 	}
 	
 	/**
@@ -76,10 +125,7 @@ export default class XEngine {
 		XGraph.clear();
 		Linker.detach();
 		Linker.clear();
-		this._onExit();
-		this._onDraw = null;
-		this._onStop = null;
-		this._onExit = null;
+		EventManager.trigger(this.E_EXIT);
 	}
 	
 	/**
@@ -88,14 +134,16 @@ export default class XEngine {
 	static startLoop() {
 		let now, delta, lastDraw = new Date();
 		const loop = () => {
-			if (!XEngine._running) {
+			if (!this._running) {
 				return;
 			}
+			this._frames++;
 			now = new Date();
 			delta = (now - lastDraw);
 			lastDraw = now;
-			XEngine._onDraw(now, delta);
-			XKeyboard.updateLastDown();
+			this.updateRCX(now, delta);
+			EventManager.trigger(this.E_DRAW);
+			this.keyboard.updateLastDown();
 			Dom.nextFrame(loop);
 		};
 		Dom.nextFrame(loop);
@@ -106,9 +154,11 @@ export default class XEngine {
 	 * Custom log function
 	 */
 	static log() {
-		let args = Array.prototype.slice.call(arguments);
-		args.unshift('XEngine:');
-		console.log.apply(this, args);
+		if (Configs.DEBUG) {
+			let args = Array.prototype.slice.call(arguments);
+			args.unshift('XEngine:');
+			console.log.apply(this, args);
+		}
 	}
 	
 }

@@ -12,24 +12,44 @@ import Util from './util';
  */
 export default class Styler {
 	
-	/** @var {CanvasRenderingContext2D} */
+	/** @type {CanvasRenderingContext2D} */
 	ctx;
-	/** @var {"fill" | "stroke"} */
+	
+	/** @type {"fill" | "stroke"} */
 	method;
-	/** @var {string | CanvasGradient | CanvasPattern} */
+	
+	/** @type {string | CanvasGradient | CanvasPattern} */
 	color;
-	/** @var {string} */
+	
+	/** @type {string} */
 	font;
-	/** @var {"center" | "end" | "left" | "right" | "start"} */
+	
+	/** @type {"center" | "end" | "left" | "right" | "start"} */
 	textAlign;
-	/** @var {number} */
+	
+	/** @type {number} */
 	lineWidth;
 	
+	/** @type {CanvasLineCap} */
+	lineCap; // "butt" || "round" || "square"
+	
+	/**
+	 * @param {object} options
+	 */
 	constructor(options) {
 		Util.copyFields(options, this);
 		if (!this.ctx) {
 			throw new Error('No ctx');
 		}
+	}
+	
+	/**
+	 * @param {object} options
+	 * @return this
+	 */
+	set(options) {
+		Util.copyFields(options, this);
+		return this;
 	}
 	
 	/**
@@ -41,7 +61,7 @@ export default class Styler {
 		if (this.font) this.ctx.font = this.font;
 		if (this.textAlign) this.ctx.textAlign = this.textAlign;
 		if (this.lineWidth) this.ctx.lineWidth = this.lineWidth;
-		//.lineCap = "butt" || "round" || "square";
+		if (this.lineCap) this.ctx.lineCap = this.lineCap;
 	}
 	
 	/**
@@ -58,7 +78,6 @@ export default class Styler {
 	}
 	
 	/**
-	 *
 	 * @param {string} text
 	 * @param {number} x
 	 * @param {number} y
@@ -72,5 +91,17 @@ export default class Styler {
 			this.ctx.strokeText(text, x, y);
 		}
 	}
+	
+	/**
+	 * @param x
+	 * @param y
+	 * @param [s]
+	 */
+	drawDot(x, y, s) {
+		this.update();
+		if (typeof s !== 'number') s = 1;
+		this.ctx.fillRect(x, y, s, s);
+	}
+	
 	
 }

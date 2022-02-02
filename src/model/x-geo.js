@@ -12,14 +12,18 @@ import XMath from './x-math';
  * Vector 2D class
  */
 export class Vec2 {
-	/** @var {number} */
+	/** @type {number} */
 	x;
-	/** @var {number} */
+	/** @type {number} */
 	y;
 	
+	/**
+	 * @param {number} [x]
+	 * @param {number} [y]
+	 */
 	constructor(x, y) {
-		this.x = x;
-		this.y = y;
+		this.x = XMath.num(x);
+		this.y = XMath.num(y);
 	}
 	
 	/**
@@ -109,9 +113,9 @@ export class Vec2 {
  * 2D Line class
  */
 export class Line {
-	/** @var {Vec2} */
+	/** @type {Vec2} */
 	p1;
-	/** @var {Vec2} */
+	/** @type {Vec2} */
 	p2;
 	
 	/**
@@ -129,7 +133,7 @@ export class Line {
  * Polygon class
  */
 export class Polygon {
-	/** @var {Vec2[]} */
+	/** @type {Vec2[]} */
 	ps;
 	
 	/**
@@ -145,11 +149,11 @@ export class Polygon {
  * Triangle class
  */
 export class Triangle {
-	/** @var {Vec2} */
+	/** @type {Vec2} */
 	p1;
-	/** @var {Vec2} */
+	/** @type {Vec2} */
 	p2;
-	/** @var {Vec2} */
+	/** @type {Vec2} */
 	p3;
 	
 	/**
@@ -171,9 +175,9 @@ export class Triangle {
  * size: width, height
  */
 export class Frame {
-	/** @var {Vec2} */
+	/** @type {Vec2} */
 	point;
-	/** @var {Vec2} */
+	/** @type {Vec2} */
 	size;
 	
 	/**

@@ -10,44 +10,51 @@ import Dom from './dom';
 
 export default class XMouse {
 	
-	/** @var {boolean} */
-	static left;
+	/** @type {boolean} */
+	left;
 	
-	/** @var {boolean} */
-	static middle;
+	/** @type {boolean} */
+	middle;
 	
-	/** @var {boolean} */
-	static right;
+	/** @type {boolean} */
+	right;
 	
-	/** @var {Vec2} */
-	static position;
+	/** @type {Vec2} */
+	position;
+	
+	/**
+	 * Hook 'this' to _update method
+	 */
+	constructor() {
+		this._update = this._update.bind(this);
+	}
 	
 	/**
 	 * Enable updating mouse input vars
 	 */
-	static enable() {
+	enable() {
 		this.reset();
-		Dom.register('mousedown', XMouse._updateButtons);
-		Dom.register('mouseup', XMouse._updateButtons);
-		Dom.register('mousemove', XMouse._updateButtons);
-		Dom.register('contextmenu', XMouse._menu);
+		Dom.register('mousedown', this._update);
+		Dom.register('mouseup', this._update);
+		Dom.register('mousemove', this._update);
+		Dom.register('contextmenu', this._update);
 	}
 	
 	/**
 	 * Disable updating
 	 */
-	static disable() {
-		Dom.unregister('mousedown', XMouse._updateButtons);
-		Dom.unregister('mouseup', XMouse._updateButtons);
-		Dom.unregister('mousemove', XMouse._updateButtons);
-		Dom.unregister('contextmenu', XMouse._menu);
+	disable() {
+		Dom.unregister('mousedown', this._update);
+		Dom.unregister('mouseup', this._update);
+		Dom.unregister('mousemove', this._update);
+		Dom.unregister('contextmenu', this._update);
 		this.reset();
 	}
 	
 	/**
 	 * Initialize vars
 	 */
-	static reset() {
+	reset() {
 		this.left = false;
 		this.middle = false;
 		this.right = false;
@@ -63,8 +70,11 @@ export default class XMouse {
 	 * @param {MouseEvent} event
 	 * @private
 	 */
-	static _updateButtons(event) {
+	_update(event) {
 		event.preventDefault();
+		if (event.type === 'contextmenu') {
+			return;
+		}
 		const {type, button, which, offsetX, offsetY} = event;
 		const btn = {};
 		let index;
@@ -81,20 +91,10 @@ export default class XMouse {
 		if (type === 'mouseup') {
 			btn[index] = false;
 		}
-		XMouse.left = !!btn[1];
-		XMouse.middle = !!btn[2];
-		XMouse.right = !!btn[3];
-		XMouse.position = new Vec2(offsetX, offsetY);
+		this.left = !!btn[1];
+		this.middle = !!btn[2];
+		this.right = !!btn[3];
+		this.position = new Vec2(offsetX, offsetY);
 	}
 	
-	/**
-	 * Context Menu handler
-	 * Blocks right click menu
-	 *
-	 * @param e
-	 * @private
-	 */
-	static _menu(e) {
-		e.preventDefault();
-	}
 }
