@@ -26,6 +26,12 @@ export default class XEngine {
 	static E_EXIT = 'x.exit';
 	
 	static _running = false;
+	static _frames;
+	
+	/** @var {XMouse} */
+	static mouse;
+	/** @var {XKeyboard} */
+	static keyboard;
 	
 	/**
 	 * Initialize engine
@@ -35,7 +41,9 @@ export default class XEngine {
 		Linker.init();
 		Linker.attach();
 		XGraph.init();
-		EventManager.trigger(XEngine.E_INIT);
+		this.keyboard = new XKeyboard();
+		this.mouse = new XMouse();
+		EventManager.trigger(this.E_INIT);
 	}
 	
 	/**
@@ -57,7 +65,8 @@ export default class XEngine {
 			styler: XGraph.styler,
 			cW: canvas.width,
 			cH: canvas.height,
-			mPos: XMouse.position,
+			keyboard: this.keyboard,
+			mouse: this.mouse,
 		}, RCX);
 	}
 	
@@ -69,8 +78,9 @@ export default class XEngine {
 			return;
 		}
 		this._running = true;
-		XKeyboard.enable();
-		XMouse.enable();
+		this._frames = 0;
+		this.keyboard.enable();
+		this.mouse.enable();
 		this.startLoop();
 		this.log('Started');
 	}
@@ -84,9 +94,10 @@ export default class XEngine {
 		}
 		this._running = false;
 		this.log('Stopping...');
-		XMouse.disable();
-		XKeyboard.disable();
-		EventManager.trigger(XEngine.E_STOP);
+		this.mouse.disable();
+		this.keyboard.disable();
+		EventManager.trigger(this.E_STOP);
+		console.log(`Stopped. rendered ${this._frames} frames.`);
 	}
 	
 	/**
@@ -97,7 +108,7 @@ export default class XEngine {
 		XGraph.clear();
 		Linker.detach();
 		Linker.clear();
-		EventManager.trigger(XEngine.E_EXIT);
+		EventManager.trigger(this.E_EXIT);
 	}
 	
 	/**
@@ -106,15 +117,16 @@ export default class XEngine {
 	static startLoop() {
 		let now, delta, lastDraw = new Date();
 		const loop = () => {
-			if (!XEngine._running) {
+			if (!this._running) {
 				return;
 			}
+			this._frames++;
 			now = new Date();
 			delta = (now - lastDraw);
 			lastDraw = now;
-			XEngine.updateRCX(now, delta);
-			EventManager.trigger(XEngine.E_DRAW);
-			XKeyboard.updateLastDown();
+			this.updateRCX(now, delta);
+			EventManager.trigger(this.E_DRAW);
+			this.keyboard.updateLastDown();
 			Dom.nextFrame(loop);
 		};
 		Dom.nextFrame(loop);

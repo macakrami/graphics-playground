@@ -18,13 +18,14 @@ export default class CornerStats extends BaseView {
 	
 	onDraw() {
 		
-		const {now, delta, canvas, ctx, styler, cW, cH, mPos} = RCX;
-		const {clearRect, drawText, drawPolyline} = XGraph;
+		const {styler, cW, mouse} = RCX;
+		const {drawText, drawPolyline} = XGraph;
 		
 		// draw corner texts
-		if (RCX.cornerText) {
+		let status = RCX.get('status', null);
+		if (status) {
 			styler.textAlign = 'right';
-			RCX.cornerText.forEach((text, y) => {
+			status.forEach((text, y) => {
 				drawText(text, new Vec2(cW - 8, (y + 1) * 25));
 			});
 		}
@@ -32,7 +33,11 @@ export default class CornerStats extends BaseView {
 		// custom cursor
 		if (Configs.hideCursor && Configs.customCursor) {
 			styler.method = 'fill';
-			drawPolyline([mPos.add(3, 15), mPos, mPos.add(12, 8)], true);
+			drawPolyline([
+				mouse.position.add(3, 15),
+				mouse.position,
+				mouse.position.add(12, 8)
+			], true);
 			styler.set({method: 'stroke', color: '#54a9e0', lineWidth: 2}).draw();
 		}
 	}

@@ -13,24 +13,31 @@ import Util from './util';
  */
 export default class XKeyboard {
 	
-	static keyState = {};
-	static keyStateLast = {};
+	keyState = {};
+	keyStateLast = {};
+	
+	/**
+	 * Hook 'this' to _update method
+	 */
+	constructor() {
+		this._update = this._update.bind(this);
+	}
 	
 	/**
 	 * Enable keyboard input listener
 	 */
-	static enable() {
+	enable() {
 		this.reset();
-		Dom.register('keydown', XKeyboard._listener);
-		Dom.register('keyup', XKeyboard._listener);
+		Dom.register('keydown', this._update);
+		Dom.register('keyup', this._update);
 	}
 	
 	/**
 	 * Disable keyboard input listener
 	 */
-	static disable() {
-		Dom.unregister('keydown', XKeyboard._listener);
-		Dom.unregister('keyup', XKeyboard._listener);
+	disable() {
+		Dom.unregister('keydown', this._update);
+		Dom.unregister('keyup', this._update);
 		this.reset();
 	}
 	
@@ -40,8 +47,8 @@ export default class XKeyboard {
 	 * @param {number} code Key code to check
 	 * @returns {boolean}
 	 */
-	static isDown(code) {
-		return XKeyboard.keyState[code];
+	isDown(code) {
+		return this.keyState[code];
 	}
 	
 	/**
@@ -50,27 +57,28 @@ export default class XKeyboard {
 	 * @param {number} code Key code to check
 	 * @returns {boolean}
 	 */
-	static isPressed(code) {
+	isPressed(code) {
 		return this.isDown(code) && !this.keyStateLast[code];
 	}
 	
 	/**
-	 *
 	 * @param {KeyboardEvent} event
 	 */
-	static _listener(event) {
-		XKeyboard.keyState[event.keyCode] = event.type === 'keydown';
+	_update(event) {
+		this.keyState[event.keyCode] = event.type === 'keydown';
 	}
 	
 	/**
 	 * Store last values
 	 */
-	static updateLastDown() {
+	updateLastDown() {
 		Util.copyFields(this.keyState, this.keyStateLast);
 	}
 	
-	
-	static reset() {
+	/**
+	 * Reset all vars
+	 */
+	reset() {
 		this.keyState = {};
 		this.keyStateLast = {};
 	}

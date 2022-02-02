@@ -5,14 +5,13 @@
  * MIT Licensed
  */
 
-import Linker from '../model/linker';
-import XMouse from '../model/x-mouse';
 import {Line, Vec2, Geometry} from '../model/x-geo';
 import XGraph from '../model/x-graph';
 import XMath from '../model/x-math';
 import RCX from '../model/render-context';
 import BaseView from './base-view';
 
+// TODO: full spin per second
 
 export default class GeoFun extends BaseView {
 	
@@ -21,7 +20,7 @@ export default class GeoFun extends BaseView {
 	
 	onDraw() {
 		
-		const {now, delta, canvas, ctx, styler, cW, cH, mPos} = RCX;
+		const {styler} = RCX;
 		const {drawLines} = XGraph;
 		
 		// box lines
@@ -63,7 +62,7 @@ export default class GeoFun extends BaseView {
 	rotatingLines(lines) {
 		// apply rotation
 		this.rotation = XMath.radianClip(this.rotation + 0.005);
-		const {mPos} = RCX;
+		const {mouse: {position}} = RCX;
 		let count = 3; // rotating lines count
 		let length = 3000; // line initial length
 		let angle = XMath.PIx2 / count;
@@ -76,13 +75,13 @@ export default class GeoFun extends BaseView {
 			if (rr > XMath.PIx2) rr -= XMath.PIx2;
 			
 			// initial line
-			line = new Line(mPos, mPos.nextPoint(rr, length));
+			line = new Line(position, position.nextPoint(rr, length));
 			
 			// check for intersections
 			for (i = 0; i < len; i++) {
 				// if line intersects, trim
 				if (( intersect = Geometry.get_line_intersection(line, lines[i]) )) {
-					line = new Line(mPos, intersect);
+					line = new Line(position, intersect);
 				}
 			}
 			xLines.push(line);

@@ -22,17 +22,18 @@ export default class MainView extends BaseView {
 	
 	onDraw() {
 		
-		const {now, delta, canvas, ctx, styler, cW, cH, mPos} = RCX;
-		const {clearRect, drawText, drawPolyline} = XGraph;
+		const {delta, styler, keyboard, mouse} = RCX;
+		const {clearRect} = XGraph;
+		const {KEY: {DOM_VK_ESCAPE, DOM_VK_F}} = XKeyboard;
 		
 		// Esc to exit
-		if (XKeyboard.isDown(XKeyboard.KEY.DOM_VK_ESCAPE)) {
+		if (keyboard.isDown(DOM_VK_ESCAPE)) {
 			XEngine.clear();
 			return;
 		}
 		
 		// F to Fullscreen
-		if (XKeyboard.isPressed(XKeyboard.KEY.DOM_VK_F)) {
+		if (keyboard.isPressed(DOM_VK_F)) {
 			Linker.toggleFullscreen();
 		}
 		
@@ -49,12 +50,12 @@ export default class MainView extends BaseView {
 		});
 		
 		// corner text prep
-		RCX.cornerText = [
+		RCX.set('status', [
 			`FPS: ${XMath.fps(delta)}`,
 			`Esc = exit`,
 			`F = Toggle Fullscreen (${Linker.inFullscreen ? 'ON' : 'OFF'})`,
-			`(${mPos.x}, ${mPos.y})`
-		];
+			`(${mouse.position.x}, ${mouse.position.y})`
+		]);
 		
 	}
 	
