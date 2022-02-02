@@ -11,31 +11,31 @@
  */
 export default class RCX {
 	
-	/** @var {XKeyboard} */
+	/** @type {XKeyboard} */
 	static keyboard;
 	
-	/** @var {XMouse} */
+	/** @type {XMouse} */
 	static mouse;
 	
-	/** @var {HTMLCanvasElement} */
+	/** @type {HTMLCanvasElement} */
 	static canvas;
 	
-	/** @var {CanvasRenderingContext2D} */
+	/** @type {CanvasRenderingContext2D} */
 	static ctx;
 	
-	/** @var {Styler} */
+	/** @type {Styler} */
 	static styler;
 	
-	/** @var {number} */
+	/** @type {number} */
 	static cW;
 	
-	/** @var {number} */
+	/** @type {number} */
 	static cH;
 	
-	/** @var {Date} */
+	/** @type {Date} */
 	static now;
 	
-	/** @var {number} */
+	/** @type {number} */
 	static delta;
 	
 	

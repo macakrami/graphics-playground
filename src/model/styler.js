@@ -12,19 +12,25 @@ import Util from './util';
  */
 export default class Styler {
 	
-	/** @var {CanvasRenderingContext2D} */
+	/** @type {CanvasRenderingContext2D} */
 	ctx;
-	/** @var {"fill" | "stroke"} */
+	
+	/** @type {"fill" | "stroke"} */
 	method;
-	/** @var {string | CanvasGradient | CanvasPattern} */
+	
+	/** @type {string | CanvasGradient | CanvasPattern} */
 	color;
-	/** @var {string} */
+	
+	/** @type {string} */
 	font;
-	/** @var {"center" | "end" | "left" | "right" | "start"} */
+	
+	/** @type {"center" | "end" | "left" | "right" | "start"} */
 	textAlign;
-	/** @var {number} */
+	
+	/** @type {number} */
 	lineWidth;
-	/** @var {CanvasLineCap} */
+	
+	/** @type {CanvasLineCap} */
 	lineCap; // "butt" || "round" || "square"
 	
 	/**

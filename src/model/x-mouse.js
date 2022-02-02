@@ -10,16 +10,16 @@ import Dom from './dom';
 
 export default class XMouse {
 	
-	/** @var {boolean} */
+	/** @type {boolean} */
 	left;
 	
-	/** @var {boolean} */
+	/** @type {boolean} */
 	middle;
 	
-	/** @var {boolean} */
+	/** @type {boolean} */
 	right;
 	
-	/** @var {Vec2} */
+	/** @type {Vec2} */
 	position;
 	
 	/**

@@ -19,7 +19,7 @@ import Linker from './model/linker';
 
 class Main {
 	
-	/** @var {BaseView[]} */
+	/** @type {BaseView[]} */
 	static viewInstances = [];
 	
 	/**

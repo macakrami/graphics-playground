@@ -15,9 +15,9 @@ import XMath from './x-math';
  */
 export default class XGraph {
 	
-	/** @var {Styler} */
+	/** @type {Styler} */
 	static styler;
-	/** @var {CanvasRenderingContext2D} */
+	/** @type {CanvasRenderingContext2D} */
 	static ctx;
 	
 	/**

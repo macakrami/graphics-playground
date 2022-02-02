@@ -25,12 +25,25 @@ export default class XEngine {
 	static E_STOP = 'x.stop';
 	static E_EXIT = 'x.exit';
 	
+	/**
+	 * Whether the engine is running or not
+	 *
+	 * @type {boolean}
+	 * @private
+	 */
 	static _running = false;
+	
+	/**
+	 * Frames drawn count
+	 *
+	 * @type {number}
+	 * @private
+	 */
 	static _frames;
 	
-	/** @var {XMouse} */
+	/** @type {XMouse} */
 	static mouse;
-	/** @var {XKeyboard} */
+	/** @type {XKeyboard} */
 	static keyboard;
 	
 	/**

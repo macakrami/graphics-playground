@@ -12,11 +12,14 @@ import XEngine from './x-engine';
  * Handles connection of DOM to Canvas to graphics engine.
  */
 export default class Linker {
-	/** @var {HTMLCanvasElement} */
+	
+	/** @type {HTMLCanvasElement} */
 	static canvas;
-	/** @var {CanvasRenderingContext2D} */
+	
+	/** @type {CanvasRenderingContext2D} */
 	static ctx;
-	/** @var {boolean} */
+	
+	/** @type {boolean} */
 	static inFullscreen = false;
 	
 	/**

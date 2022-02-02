@@ -17,7 +17,6 @@ export default class GeoFun extends BaseView {
 	
 	rotation = 0;
 	
-	
 	onDraw() {
 		
 		const {styler} = RCX;
